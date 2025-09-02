@@ -1,0 +1,25 @@
+{
+  "name": "@speechwriter/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SpeechWriter API functions",
+  "scripts": {
+    "build": "tsc",
+    "dev": "netlify dev",
+    "lint": "eslint . --ext .ts,.js",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@speechwriter/config": "workspace:*",
+    "@netlify/functions": "^2.4.1",
+    "@anthropic-ai/sdk": "^0.17.0",
+    "openai": "^4.26.0",
+    "zod": "^3.22.4",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/aws-lambda": "^8.10.132",
+    "netlify-lambda": "^2.0.16"
+  }
+}

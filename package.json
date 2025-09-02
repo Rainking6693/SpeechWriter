@@ -1,0 +1,49 @@
+{
+  "name": "speechwriter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-powered speech writing platform",
+  "author": "SpeechWriter Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=8.15.0"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "dev": "pnpm --filter @speechwriter/web dev",
+    "build": "pnpm --recursive build",
+    "start": "pnpm --filter @speechwriter/web start",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "type-check": "tsc --noEmit",
+    "clean": "pnpm --recursive exec rm -rf dist .next node_modules/.cache",
+    "test": "pnpm --recursive test",
+    "test:watch": "pnpm --recursive test:watch",
+    "deploy": "netlify deploy --prod",
+    "deploy:preview": "netlify deploy"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "netlify-cli": "^17.15.0",
+    "prettier": "^3.2.4",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "ai",
+    "speech-writing",
+    "typescript",
+    "next.js",
+    "netlify",
+    "monorepo"
+  ]
+}

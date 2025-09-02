@@ -1,0 +1,9 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "tools/*"
+
+# Shared dependencies hoisting
+shared-workspace-lockfile: true
+prefer-workspace-packages: true
+auto-install-peers: true
