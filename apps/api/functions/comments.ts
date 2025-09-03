@@ -1,6 +1,6 @@
 import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
-import { z } from 'zod';
 import type { ApiResponse } from '@speechwriter/config';
+import { z } from 'zod';
 
 // Request validation schemas
 const createCommentSchema = z.object({
@@ -103,7 +103,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 // Get comments for a speech
 async function handleGetComments(event: HandlerEvent, headers: any) {
   const queryParams = event.queryStringParameters || {};
-  const speechId = queryParams.speechId;
+  const speechId = queryParams['speechId'];
 
   if (!speechId) {
     return {

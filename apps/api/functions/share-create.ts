@@ -1,8 +1,9 @@
-import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
-import { z } from 'zod';
-import { sign, verify } from 'jsonwebtoken';
 import { randomBytes } from 'crypto';
+
+import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
 import type { ApiResponse } from '@speechwriter/config';
+import { sign, verify } from 'jsonwebtoken';
+import { z } from 'zod';
 
 // Request validation schema
 const createShareSchema = z.object({
@@ -40,7 +41,7 @@ const calculateExpiry = (expiresIn: string): Date | null => {
 
 // Generate signed JWT for additional security
 const generateShareJWT = (payload: any): string => {
-  const secret = process.env.JWT_SECRET || 'your-secret-key';
+  const secret = process.env['JWT_SECRET'] || 'your-secret-key';
   return sign(payload, secret, { expiresIn: '30d' });
 };
 
@@ -128,7 +129,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     });
 
     // Construct share URL
-    const baseUrl = process.env.SITE_URL || 'https://aispeechwriter.netlify.app';
+    const baseUrl = process.env['SITE_URL'] || 'https://aispeechwriter.netlify.app';
     const shareUrl = `${baseUrl}/shared/${token}?sig=${signedToken}`;
 
     return {

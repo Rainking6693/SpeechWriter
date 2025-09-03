@@ -1,7 +1,7 @@
 import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
-import { z } from 'zod';
-import { verify } from 'jsonwebtoken';
 import type { ApiResponse } from '@speechwriter/config';
+import { verify } from 'jsonwebtoken';
+import { z } from 'zod';
 
 // Request validation schema
 const accessShareSchema = z.object({
@@ -11,7 +11,7 @@ const accessShareSchema = z.object({
 
 // Verify JWT signature
 const verifyShareJWT = (token: string): any => {
-  const secret = process.env.JWT_SECRET || 'your-secret-key';
+  const secret = process.env['JWT_SECRET'] || 'your-secret-key';
   try {
     return verify(token, secret);
   } catch (error) {
@@ -53,8 +53,8 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
   try {
     const queryParams = event.queryStringParameters || {};
     const validatedData = accessShareSchema.parse({
-      token: queryParams.token,
-      signature: queryParams.sig,
+      token: queryParams['token'],
+      signature: queryParams['sig'],
     });
 
     // TODO: Fetch share link from database

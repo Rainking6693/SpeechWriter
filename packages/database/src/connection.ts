@@ -1,6 +1,7 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+
 import * as schema from './schema';
 
 // Global connection instance to avoid multiple connections
@@ -11,7 +12,7 @@ let globalClient: ReturnType<typeof postgres> | undefined;
  * Get database connection URL from environment
  */
 function getDatabaseUrl(): string {
-  const url = process.env.DATABASE_URL;
+  const url = process.env['DATABASE_URL'];
   
   if (!url) {
     throw new Error('DATABASE_URL environment variable is required');
@@ -37,7 +38,7 @@ export function createConnection() {
   // Create Drizzle instance with schema
   const db = drizzle(client, { 
     schema,
-    logger: process.env.NODE_ENV === 'development' ? true : false
+    logger: process.env['NODE_ENV'] === 'development' ? true : false
   });
   
   return { db, client };

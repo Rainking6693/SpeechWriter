@@ -1,6 +1,7 @@
+import { eq } from 'drizzle-orm';
+
 import { getDb, sql } from './connection';
 import * as schema from './schema';
-import { eq } from 'drizzle-orm';
 
 /**
  * Seed development data including demo persona, story snippets, and sample speech
