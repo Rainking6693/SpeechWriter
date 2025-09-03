@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { personas, styleCards, stylometryData } from '@speechwriter/database/src/schema/personas'
-import { eq, and } from 'drizzle-orm'
-import { z } from 'zod'
+import { personas, styleCards } from '@speechwriter/database/schema';
+import { eq, and } from 'drizzle-orm';
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+
+import { auth } from '@/lib/auth';
+import { db } from '@/lib/db';
 
 const toneSliderSchema = z.object({
   formal: z.number().min(0).max(100),
@@ -12,28 +13,30 @@ const toneSliderSchema = z.object({
   authoritative: z.number().min(0).max(100),
   humorous: z.number().min(0).max(100),
   empathetic: z.number().min(0).max(100),
-})
+});
 
-const updatePersonaSchema = z.object({
-  name: z.string().min(1).max(100),
-  description: z.string().max(500),
-  toneSliders: toneSliderSchema,
-  doList: z.string().max(1000),
-  dontList: z.string().max(1000),
-  sampleText: z.string().max(5000),
-  isDefault: z.boolean(),
-  metadata: z.record(z.any()),
-}).partial()
+const updatePersonaSchema = z
+  .object({
+    name: z.string().min(1).max(100),
+    description: z.string().max(500),
+    toneSliders: toneSliderSchema,
+    doList: z.string().max(1000),
+    dontList: z.string().max(1000),
+    sampleText: z.string().max(5000),
+    isDefault: z.boolean(),
+    metadata: z.record(z.any()),
+  })
+  .partial();
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth()
-    
+    const session = await auth();
+
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const persona = await db
@@ -45,10 +48,10 @@ export async function GET(
           eq(personas.userId, session.user.id).or(eq(personas.isPreset, true))
         )
       )
-      .limit(1)
+      .limit(1);
 
     if (persona.length === 0) {
-      return NextResponse.json({ error: 'Persona not found' }, { status: 404 })
+      return NextResponse.json({ error: 'Persona not found' }, { status: 404 });
     }
 
     // Get style card if it exists
@@ -56,19 +59,18 @@ export async function GET(
       .select()
       .from(styleCards)
       .where(eq(styleCards.personaId, params.id))
-      .limit(1)
+      .limit(1);
 
     return NextResponse.json({
       ...persona[0],
       styleCard: styleCard[0] || null,
-    })
-
+    });
   } catch (error) {
-    console.error('Error fetching persona:', error)
+    console.error('Error fetching persona:', error);
     return NextResponse.json(
       { error: 'Failed to fetch persona' },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -77,29 +79,26 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth()
-    
+    const session = await auth();
+
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json()
-    const validatedData = updatePersonaSchema.parse(body)
+    const body = await request.json();
+    const validatedData = updatePersonaSchema.parse(body);
 
     // Check if persona exists and belongs to user
     const existingPersona = await db
       .select()
       .from(personas)
       .where(
-        and(
-          eq(personas.id, params.id),
-          eq(personas.userId, session.user.id)
-        )
+        and(eq(personas.id, params.id), eq(personas.userId, session.user.id))
       )
-      .limit(1)
+      .limit(1);
 
     if (existingPersona.length === 0) {
-      return NextResponse.json({ error: 'Persona not found' }, { status: 404 })
+      return NextResponse.json({ error: 'Persona not found' }, { status: 404 });
     }
 
     // If setting as default, remove default from other personas
@@ -112,7 +111,7 @@ export async function PATCH(
             eq(personas.userId, session.user.id),
             eq(personas.id, params.id).not()
           )
-        )
+        );
     }
 
     // Update persona
@@ -123,7 +122,7 @@ export async function PATCH(
         updatedAt: new Date(),
       })
       .where(eq(personas.id, params.id))
-      .returning()
+      .returning();
 
     // If sample text or tone sliders changed, mark style card for reprocessing
     if (validatedData.sampleText || validatedData.toneSliders) {
@@ -134,25 +133,24 @@ export async function PATCH(
           processingError: null,
           updatedAt: new Date(),
         })
-        .where(eq(styleCards.personaId, params.id))
+        .where(eq(styleCards.personaId, params.id));
     }
 
-    return NextResponse.json(updatedPersona)
-
+    return NextResponse.json(updatedPersona);
   } catch (error) {
-    console.error('Error updating persona:', error)
-    
+    console.error('Error updating persona:', error);
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid input data', details: error.errors },
         { status: 400 }
-      )
+      );
     }
-    
+
     return NextResponse.json(
       { error: 'Failed to update persona' },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -161,10 +159,10 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth()
-    
+    const session = await auth();
+
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Check if persona exists and belongs to user
@@ -172,29 +170,23 @@ export async function DELETE(
       .select()
       .from(personas)
       .where(
-        and(
-          eq(personas.id, params.id),
-          eq(personas.userId, session.user.id)
-        )
+        and(eq(personas.id, params.id), eq(personas.userId, session.user.id))
       )
-      .limit(1)
+      .limit(1);
 
     if (existingPersona.length === 0) {
-      return NextResponse.json({ error: 'Persona not found' }, { status: 404 })
+      return NextResponse.json({ error: 'Persona not found' }, { status: 404 });
     }
 
     // Delete persona (cascades to style cards and stylometry data)
-    await db
-      .delete(personas)
-      .where(eq(personas.id, params.id))
+    await db.delete(personas).where(eq(personas.id, params.id));
 
-    return NextResponse.json({ success: true })
-
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting persona:', error)
+    console.error('Error deleting persona:', error);
     return NextResponse.json(
       { error: 'Failed to delete persona' },
       { status: 500 }
-    )
+    );
   }
 }
