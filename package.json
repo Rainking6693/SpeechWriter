@@ -12,7 +12,7 @@
   "packageManager": "pnpm@10.15.0",
   "scripts": {
     "dev": "pnpm --filter @speechwriter/web dev",
-    "build": "pnpm --recursive build",
+    "build": "pnpm --filter @speechwriter/config build && pnpm --filter @speechwriter/database build && pnpm --filter @speechwriter/api build && pnpm --filter @speechwriter/web build",
     "start": "pnpm --filter @speechwriter/web start",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",

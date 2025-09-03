@@ -18,8 +18,10 @@
     "paths": {
       "@speechwriter/ui": ["packages/ui/src"],
       "@speechwriter/ui/*": ["packages/ui/src/*"],
-      "@speechwriter/config": ["packages/config/src"],
-      "@speechwriter/config/*": ["packages/config/src/*"]
+      "@speechwriter/config": ["packages/config/dist", "packages/config/src"],
+      "@speechwriter/config/*": ["packages/config/dist/*", "packages/config/src/*"],
+      "@speechwriter/database": ["packages/database/dist", "packages/database/src"],
+      "@speechwriter/database/*": ["packages/database/dist/*", "packages/database/src/*"]
     }
   },
   "include": [
@@ -35,9 +37,10 @@
     ".next"
   ],
   "references": [
-    { "path": "./apps/web" },
-    { "path": "./apps/api" },
+    { "path": "./packages/config" },
+    { "path": "./packages/database" },
     { "path": "./packages/ui" },
-    { "path": "./packages/config" }
+    { "path": "./apps/api" },
+    { "path": "./apps/web" }
   ]
 }

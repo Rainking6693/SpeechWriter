@@ -1,16 +1,34 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "composite": true,
     "outDir": "dist",
     "rootDir": ".",
     "target": "ES2020",
     "module": "CommonJS",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": false,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@speechwriter/config": ["../../packages/config/dist", "../../packages/config/src"],
+      "@speechwriter/config/*": ["../../packages/config/dist/*", "../../packages/config/src/*"],
+      "@speechwriter/database": ["../../packages/database/dist", "../../packages/database/src"],
+      "@speechwriter/database/*": ["../../packages/database/dist/*", "../../packages/database/src/*"]
+    }
   },
   "include": ["functions/**/*", "*.ts"],
   "exclude": ["node_modules", "dist"],
   "references": [
-    { "path": "../../packages/config" }
+    { "path": "../../packages/config" },
+    { "path": "../../packages/database" }
   ]
 }
