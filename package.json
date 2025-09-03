@@ -9,7 +9,7 @@
     "node": ">=20.11.0",
     "pnpm": ">=8.15.0"
   },
-  "packageManager": "pnpm@8.15.0",
+  "packageManager": "pnpm@10.15.0",
   "scripts": {
     "dev": "pnpm --filter @speechwriter/web dev",
     "build": "pnpm --recursive build",
@@ -23,19 +23,35 @@
     "test": "pnpm --recursive test",
     "test:watch": "pnpm --recursive test:watch",
     "deploy": "netlify deploy --prod",
-    "deploy:preview": "netlify deploy"
+    "deploy:preview": "netlify deploy",
+    "prepare": "husky",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx packages/database/src/migrate.ts",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:setup": "tsx packages/database/src/setup.ts",
+    "db:seed": "tsx packages/database/src/seed.ts",
+    "db:reset": "tsx packages/database/src/reset.ts"
   },
   "devDependencies": {
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "@types/jsonwebtoken": "9.0.10",
     "@types/node": "^20.11.0",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
-    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "6.21.0",
+    "@typescript-eslint/parser": "6.21.0",
+    "docx": "9.5.1",
+    "dotenv-cli": "10.0.0",
+    "eslint": "8.57.1",
     "eslint-config-next": "^14.1.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "husky": "9.1.7",
+    "lint-staged": "16.1.6",
     "netlify-cli": "^17.15.0",
-    "prettier": "^3.2.4",
+    "prettier": "3.6.2",
+    "puppeteer": "24.18.0",
     "typescript": "^5.3.3"
   },
   "keywords": [
@@ -45,5 +61,24 @@
     "next.js",
     "netlify",
     "monorepo"
-  ]
+  ],
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@types/pg": "8.15.5",
+    "dotenv": "17.2.2",
+    "drizzle-kit": "0.31.4",
+    "drizzle-orm": "0.44.5",
+    "postgres": "3.4.7",
+    "tsx": "^4.20.5",
+    "zod": "^3.25.76"
+  }
 }

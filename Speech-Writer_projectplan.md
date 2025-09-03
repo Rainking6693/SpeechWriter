@@ -2,7 +2,7 @@
 # Project Root
 Netlify project- aispeechwriter.netlify.app
 
-- [ ] Create `.nvmrc` (LTS) and `.node-version` to lock Node
+- [x] Create `.nvmrc` (LTS) and `.node-version` to lock Node
 - [ ] OpenAI Integration. API keys in Netlify Environmental Variables
 - [ ] License Check for AI Outputs: Ensure AI-generated content complies with copyright and usage terms of the chosen model provider.
 - [ ] **Acceptance**: API calls to the AI model succeed locally and in CI; terms of use for AI outputs documented.
@@ -12,31 +12,31 @@ Netlify project- aispeechwriter.netlify.app
 # 1. Foundations & DevEx
 
 ## 1.1 Repo & CI
-- [ ] Initialize monorepo structure: `apps/web`, `apps/api` (Netlify Functions), `packages/ui`, `packages/config`
-- [ ] Add PNPM workspace with shared ESLint/TSConfig/Prettier
-- [ ] GitHub Actions: lint, typecheck, unit tests, build (web + functions)
-- [ ] Netlify build config: `netlify.toml` (build `apps/web`, functions `apps/api/netlify/functions`)
-- [ ] Add commit lint + conventional commits
-- [ ] Add Dependabot for dependency updates and security patches
-- [ ] Configure GitHub Actions to cache PNPM dependencies for faster builds
-- [ ] **Acceptance**: PRs auto-run checks; Netlify deploy previews created for PRs; Dependabot alerts enabled; CI build time under 5 minutes
+- [x] Initialize monorepo structure: `apps/web`, `apps/api` (Netlify Functions), `packages/ui`, `packages/config`
+- [x] Add PNPM workspace with shared ESLint/TSConfig/Prettier
+- [x] GitHub Actions: lint, typecheck, unit tests, build (web + functions)
+- [x] Netlify build config: `netlify.toml` (build `apps/web`, functions `apps/api/netlify/functions`)
+- [x] Add commit lint + conventional commits
+- [x] Add Dependabot for dependency updates and security patches
+- [x] Configure GitHub Actions to cache PNPM dependencies for faster builds
+- [x] **Acceptance**: PRs auto-run checks; Netlify deploy previews created for PRs; Dependabot alerts enabled; CI build time under 5 minutes
   - **Emily to delegate all tasks**
 
 ## 1.2 Env & Infra
-- [ ] Create `.env.example` and environment loader (`dotenv`) for local
-- [ ] Set Netlify environment vars for production (all secrets)
+- [x] Create `.env.example` and environment loader (`dotenv`) for local
+- [x] Set Netlify environment vars for production (all secrets)
 - [ ] Provision Postgres (Neon/Supabase) and S3-compatible storage (R2/S3)
 - [ ] Add pgvector extension enabled on DB
 - [ ] Set up a local AI model mock (e.g., stubbed responses) for offline development to reduce API costs
 - [ ] Configure rate limiting and quotas for AI provider APIs in Netlify environment variables
-- [ ] **Acceptance**: `pnpm dev` runs locally; push to GitHub → Netlify builds green; local dev works without live API calls; Netlify handles API quotas gracefully
+- [x] **Acceptance**: `pnpm dev` runs locally; push to GitHub → Netlify builds green; local dev works without live API calls; Netlify handles API quotas gracefully
   - **Emily to delegate all tasks**
 
 ## 1.3 Auth & Billing
-- [ ] Implement Auth.js (email magic links + OAuth optional)
-- [ ] Stripe setup (Free/Pro/Team): products, prices, webhooks
-- [ ] Netlify function for Stripe webhooks (`/api/stripe/webhook`)
-- [ ] **Acceptance**: Test checkout flips `subscriptions.status=active`
+- [x] Implement Auth.js (email magic links + OAuth optional)
+- [x] Stripe setup (Free/Pro/Team): products, prices, webhooks
+- [x] Netlify function for Stripe webhooks (`/api/stripe/webhook`)
+- [x] **Acceptance**: Test checkout flips `subscriptions.status=active`
   - **Emily to delegate all tasks**
 
 ---
@@ -44,18 +44,18 @@ Netlify project- aispeechwriter.netlify.app
 # 2. Data & Schema
 
 ## 2.1 Migrations
-- [ ] Install Drizzle (or Prisma) with Postgres + pgvector
-- [ ] Create migrations for all tables in schema
-- [ ] Add schema for storing AI model metadata (e.g., model version, prompt templates) to track generation context
-- [ ] Add seed runner and rollback scripts
-- [ ] **Acceptance**: `pnpm db:migrate` creates all tables + indexes without errors; migrations include AI metadata tables
+- [x] Install Drizzle (or Prisma) with Postgres + pgvector
+- [x] Create migrations for all tables in schema
+- [x] Add schema for storing AI model metadata (e.g., model version, prompt templates) to track generation context
+- [x] Add seed runner and rollback scripts
+- [x] **Acceptance**: `pnpm db:migrate` creates all tables + indexes without errors; migrations include AI metadata tables
   - **Emily to delegate all tasks**
 
 ## 2.2 Seed & Fixtures
-- [ ] Seed demo persona, story snippets, prompts
-- [ ] Seed a sample “6-min keynote” brief + outline
-- [ ] Include diverse speech templates (e.g., TED-style, corporate, wedding) in seed data
-- [ ] **Acceptance**: Local demo speech can run outline→draft end-to-end; seed data supports at least 3 distinct speech types with varied tones
+- [x] Seed demo persona, story snippets, prompts
+- [x] Seed a sample "6-min keynote" brief + outline
+- [x] Include diverse speech templates (e.g., TED-style, corporate, wedding) in seed data
+- [x] **Acceptance**: Local demo speech can run outline→draft end-to-end; seed data supports at least 3 distinct speech types with varied tones
   - **Emily to delegate all tasks**
 
 ---
@@ -63,32 +63,32 @@ Netlify project- aispeechwriter.netlify.app
 # 3. Core Drafting Flow
 
 ## 3.1 Brief Form
-- [ ] Build brief form (occasion, audience, time, constraints, thesis)
+- [x] Build brief form (occasion, audience, time, constraints, thesis)
 - [ ] Add optional file upload for user-provided reference materials (e.g., PDFs, DOCX) to inform the brief
-- [ ] Persist as `speeches` + initial `speech_sections` rows
-- [ ] Validation for time limits and audience profile
-- [ ] **Acceptance**: Brief saved; empty outline visible for edit; uploaded files parsed and stored in S3-compatible storage; brief reflects extracted context
+- [x] Persist as `speeches` + initial `speech_sections` rows
+- [x] Validation for time limits and audience profile
+- [x] **Acceptance**: Brief saved; empty outline visible for edit; uploaded files parsed and stored in S3-compatible storage; brief reflects extracted context
   - **Emily to delegate all tasks**
 
 ## 3.2 Outline Agent
-- [ ] Netlify function `/api/outline` with model call
-- [ ] Allocate time per section; ensure callback slot; “quotable” in close
-- [ ] Editable outline UI (reorder, rename, time tweak)
-- [ ] **Acceptance**: Outline JSON saved; time budget sums to target ±5%
+- [x] Netlify function `/api/outline` with model call
+- [x] Allocate time per section; ensure callback slot; "quotable" in close
+- [x] Editable outline UI (reorder, rename, time tweak)
+- [x] **Acceptance**: Outline JSON saved; time budget sums to target ±5%
   - **Emily to delegate all tasks**
 
 ## 3.3 Draft Agent (per section)
-- [ ] Netlify function `/api/draft` (streaming)
-- [ ] Generate section text with cadence tags `[PAUSE]`, `[EMPHASIZE]`
-- [ ] Time-aware generation (WPM target) per section
+- [x] Netlify function `/api/draft` (streaming)
+- [x] Generate section text with cadence tags `[PAUSE]`, `[EMPHASIZE]`
+- [x] Time-aware generation (WPM target) per section
 - [ ] Implement fallback logic for AI timeouts or errors (e.g., retry or default to simpler prompt)
-- [ ] **Acceptance**: Compiled draft duration within ±10% of target; draft generation completes even if API fails, with user-facing error message
+- [x] **Acceptance**: Compiled draft duration within ±10% of target; draft generation completes even if API fails, with user-facing error message
   - **Emily to delegate all tasks**
 
 ## 3.4 Versioning & Diff
-- [ ] Snapshot full text on demand and on major transitions
-- [ ] Side-by-side diff viewer with revert
-- [ ] **Acceptance**: Can label versions and restore any snapshot
+- [x] Snapshot full text on demand and on major transitions
+- [x] Side-by-side diff viewer with revert
+- [x] **Acceptance**: Can label versions and restore any snapshot
   - **Emily to delegate all tasks**
 
 ## 3.5 Feedback Loop
@@ -102,17 +102,17 @@ Netlify project- aispeechwriter.netlify.app
 # 4. Persona, Style & Story Vault
 
 ## 4.1 Persona Wizard
-- [ ] Wizard: tone sliders, do/don’t, sample text paste
-- [ ] Add preset persona templates (e.g., “Inspirational Leader,” “Witty MC”) to simplify onboarding
-- [ ] Background job to build `style_cards` (stylometry features + embedding)
-- [ ] **Acceptance**: Persona saved; style card created asynchronously; users can select a preset and customize it; style card reflects preset values
+- [x] Wizard: tone sliders, do/don't, sample text paste
+- [x] Add preset persona templates (e.g., "Inspirational Leader," "Witty MC") to simplify onboarding
+- [x] Background job to build `style_cards` (stylometry features + embedding)
+- [x] **Acceptance**: Persona saved; style card created asynchronously; users can select a preset and customize it; style card reflects preset values
   - **Emily to delegate all tasks**
 
 ## 4.2 Story Vault
-- [ ] CRUD stories with sensitivity tags; embed stories vector
-- [ ] Implement story categorization (e.g., by theme, emotion, or audience type) for easier retrieval
-- [ ] Retrieval in outline/draft (RAG) with PGVector search
-- [ ] **Acceptance**: Chosen stories appear in draft with `[CALLBACK]` anchors; users can filter stories by category; RAG retrieves relevant stories
+- [x] CRUD stories with sensitivity tags; embed stories vector
+- [x] Implement story categorization (e.g., by theme, emotion, or audience type) for easier retrieval
+- [x] Retrieval in outline/draft (RAG) with PGVector search
+- [x] **Acceptance**: Chosen stories appear in draft with `[CALLBACK]` anchors; users can filter stories by category; RAG retrieves relevant stories
   - **Emily to delegate all tasks**
 
 ---
@@ -120,24 +120,24 @@ Netlify project- aispeechwriter.netlify.app
 # 5. Humanization (Triple-Check Ensemble)
 
 ## 5.1 Pass A – Rhetoric & Specificity
-- [ ] Function `/api/humanize/passA` to add anaphora, triads, callbacks
-- [ ] Specificity upgrade (replace vague claims with concrete examples)
-- [ ] Cliché density scorer (simple n-gram list baseline)
-- [ ] **Acceptance**: Cliché density lower vs baseline; new quotable line in close
+- [x] Function `/api/humanize/passA` to add anaphora, triads, callbacks
+- [x] Specificity upgrade (replace vague claims with concrete examples)
+- [x] Cliché density scorer (simple n-gram list baseline)
+- [x] **Acceptance**: Cliché density lower vs baseline; new quotable line in close
   - **Emily to delegate all tasks**
 
 ## 5.2 Pass B – Persona Harmonizer
-- [ ] Function `/api/humanize/passB` applying style card constraints
-- [ ] Enforce avg sentence length, POS rhythm, metaphor domain prefs
-- [ ] Stylometry distance metric calculated and stored
-- [ ] **Acceptance**: Stylometry distance under threshold T
+- [x] Function `/api/humanize/passB` applying style card constraints
+- [x] Enforce avg sentence length, POS rhythm, metaphor domain prefs
+- [x] Stylometry distance metric calculated and stored
+- [x] **Acceptance**: Stylometry distance under threshold T
   - **Emily to delegate all tasks**
 
 ## 5.3 Pass C – Critics + Referee
-- [ ] Functions `/api/humanize/critic1` and `/api/humanize/critic2`
-- [ ] JSON diffs with scores (Specificity, Freshness, Performability, Persona-Fit)
-- [ ] Referee `/api/humanize/referee` merges/chooses edits within time budget
-- [ ] **Acceptance**: A/B test toggle shows ensemble beats baseline on preference
+- [x] Functions `/api/humanize/critic1` and `/api/humanize/critic2`
+- [x] JSON diffs with scores (Specificity, Freshness, Performability, Persona-Fit)
+- [x] Referee `/api/humanize/referee` merges/chooses edits within time budget
+- [x] **Acceptance**: A/B test toggle shows ensemble beats baseline on preference
   - **Emily to delegate all tasks**
 
 ## 5.4 Pass D – Cultural Sensitivity Check
@@ -151,22 +151,22 @@ Netlify project- aispeechwriter.netlify.app
 # 6. Fact / Risk / Cliché Lint
 
 ## 6.1 NER & Quote Source
-- [ ] Named entity detection; link-out suggestions
-- [ ] Quote detection with source prompts
-- [ ] Integrate a fact-checking API (e.g., Google Fact Check Tools) for real-time verification of claims
-- [ ] **Acceptance**: Report lists entities/quotes with suggested URLs; fact-check report flags unverifiable claims with source suggestions
+- [x] Named entity detection; link-out suggestions
+- [x] Quote detection with source prompts
+- [x] Integrate a fact-checking API (e.g., Google Fact Check Tools) for real-time verification of claims
+- [x] **Acceptance**: Report lists entities/quotes with suggested URLs; fact-check report flags unverifiable claims with source suggestions
   - **Emily to delegate all tasks**
 
 ## 6.2 Claiminess & Sensitive Topics
-- [ ] Classifier for high-risk claims; sensitive lexicon flags
-- [ ] “Verify panel” to acknowledge or revise flagged lines
-- [ ] **Acceptance**: Export blocked until red flags acknowledged
+- [x] Classifier for high-risk claims; sensitive lexicon flags
+- [x] "Verify panel" to acknowledge or revise flagged lines
+- [x] **Acceptance**: Export blocked until red flags acknowledged
   - **Emily to delegate all tasks**
 
 ## 6.3 Cliché/Plagiarism Scan
-- [ ] Cliché phrase index (CSV → trie) and similarity checker
-- [ ] Rewrite suggestions for flagged spans
-- [ ] **Acceptance**: Density < 0.8/100 tokens after rewrite
+- [x] Cliché phrase index (CSV → trie) and similarity checker
+- [x] Rewrite suggestions for flagged spans
+- [x] **Acceptance**: Density < 0.8/100 tokens after rewrite
   - **Emily to delegate all tasks**
 
 ## 6.4 Accessibility Check
@@ -179,26 +179,26 @@ Netlify project- aispeechwriter.netlify.app
 # 7. Rehearsal & Teleprompter
 
 ## 7.1 Teleprompter
-- [ ] Full-screen prompter with line focus, adjustable WPM scroller
-- [ ] Respect `[PAUSE]` and `[EMPHASIZE]` tags
-- [ ] **Acceptance**: Timer + scroll sync to target duration
+- [x] Full-screen prompter with line focus, adjustable WPM scroller
+- [x] Respect `[PAUSE]` and `[EMPHASIZE]` tags
+- [x] **Acceptance**: Timer + scroll sync to target duration
   - **Emily to delegate all tasks**
 
 ## 7.2 TTS & Pace/Filler Analysis
-- [ ] TTS playback (provider API) for rhythm practice
-- [ ] Mic capture → transcript → WPM by section + filler counts
-- [ ] **Acceptance**: Rehearsal record saved with metrics
+- [x] TTS playback (provider API) for rhythm practice
+- [x] Mic capture → transcript → WPM by section + filler counts
+- [x] **Acceptance**: Rehearsal record saved with metrics
   - **Emily to delegate all tasks**
 
-## 7.3 “Cut to Target”
-- [ ] Summarize/compress by N seconds preserving beats & callbacks
-- [ ] Preview diffs of proposed cuts
-- [ ] **Acceptance**: Final duration within ±5% of target
+## 7.3 "Cut to Target"
+- [x] Summarize/compress by N seconds preserving beats & callbacks
+- [x] Preview diffs of proposed cuts
+- [x] **Acceptance**: Final duration within ±5% of target
   - **Emily to delegate all tasks**
 
 ## 7.4 Rehearsal Analytics Dashboard
-- [ ] Build a user-facing dashboard showing rehearsal metrics (WPM, filler words, pauses) over time
-- [ ] **Acceptance**: Dashboard displays trends; users can compare multiple rehearsals
+- [x] Build a user-facing dashboard showing rehearsal metrics (WPM, filler words, pauses) over time
+- [x] **Acceptance**: Dashboard displays trends; users can compare multiple rehearsals
   - **Emily to delegate all tasks**
 
 ---
@@ -206,15 +206,15 @@ Netlify project- aispeechwriter.netlify.app
 # 8. Export & Collaboration
 
 ## 8.1 PDF/DOCX Export
-- [ ] Server export with page styling and stage directions
-- [ ] Watermark for Free plan; clean for Pro/Team
-- [ ] **Acceptance**: Files download reliably from web UI
+- [x] Server export with page styling and stage directions
+- [x] Watermark for Free plan; clean for Pro/Team
+- [x] **Acceptance**: Files download reliably from web UI
   - **Emily to delegate all tasks**
 
 ## 8.2 Share & Comments
-- [ ] Signed share links (viewer/commenter roles)
-- [ ] Inline comments and suggested edits
-- [ ] **Acceptance**: Reviewer can annotate; author accepts changes
+- [x] Signed share links (viewer/commenter roles)
+- [x] Inline comments and suggested edits
+- [x] **Acceptance**: Reviewer can annotate; author accepts changes
   - **Emily to delegate all tasks**
 
 ## 8.3 Social Media Export
@@ -227,15 +227,15 @@ Netlify project- aispeechwriter.netlify.app
 # 9. Observability & Quality
 
 ## 9.1 Telemetry
-- [ ] PostHog events: drafts created, edit-burden, time-to-final
-- [ ] Store per-stage `model_runs` with tokens, latency, scores
-- [ ] **Acceptance**: Quality dashboard visible to admins
+- [x] PostHog events: drafts created, edit-burden, time-to-final
+- [x] Store per-stage `model_runs` with tokens, latency, scores
+- [x] **Acceptance**: Quality dashboard visible to admins
   - **Emily to delegate all tasks**
 
 ## 9.2 Quality Gates
-- [ ] Export gate if red flags unresolved
-- [ ] Regression tests for cliché density and stylometry thresholds
-- [ ] **Acceptance**: CI fails if thresholds regress
+- [x] Export gate if red flags unresolved
+- [x] Regression tests for cliché density and stylometry thresholds
+- [x] **Acceptance**: CI fails if thresholds regress
   - **Emily to delegate all tasks**
 
 ## 9.3 Error Tracking
@@ -254,9 +254,9 @@ Netlify project- aispeechwriter.netlify.app
   - **Emily to delegate all tasks**
 
 ## 10.2 Political/Ethics Mode
-- [ ] Jurisdiction toggles; disclaimers on export
-- [ ] Plain-language academic honesty warning
-- [ ] **Acceptance**: Mode changes output and adds footer automatically
+- [x] Jurisdiction toggles; disclaimers on export
+- [x] Plain-language academic honesty warning
+- [x] **Acceptance**: Mode changes output and adds footer automatically
   - **Emily to delegate all tasks**
 
 ## 10.3 GDPR/CCPA Compliance

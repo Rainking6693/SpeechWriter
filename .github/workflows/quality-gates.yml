@@ -1,0 +1,214 @@
+name: Quality Gates
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+    
+  # Run quality checks daily to catch regressions
+  schedule:
+    - cron: '0 8 * * *'  # Daily at 8 AM UTC
+
+env:
+  NODE_VERSION: '20.11.0'
+  PNPM_VERSION: '8.15.0'
+
+jobs:
+  quality-regression-tests:
+    name: Quality Regression Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: speechwriter
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: speechwriter_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup test database
+        env:
+          DATABASE_URL: postgresql://speechwriter:testpass@localhost:5432/speechwriter_test
+        run: |
+          pnpm db:migrate
+
+      - name: Run quality regression tests
+        env:
+          DATABASE_URL: postgresql://speechwriter:testpass@localhost:5432/speechwriter_test
+          NODE_ENV: test
+          # Mock API keys for testing
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'test-key-mock' }}
+          NEXTAUTH_SECRET: test-secret-for-quality-tests
+        run: |
+          pnpm --filter @speechwriter/testing test:quality
+
+      - name: Check quality thresholds
+        env:
+          DATABASE_URL: postgresql://speechwriter:testpass@localhost:5432/speechwriter_test
+        run: |
+          # Run threshold validation script
+          node packages/testing/scripts/validate-thresholds.js
+
+      - name: Upload quality test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: quality-test-results
+          path: |
+            packages/testing/coverage/
+            packages/testing/test-results.xml
+          retention-days: 30
+
+  cliche-density-validation:
+    name: Cliché Density Validation
+    runs-on: ubuntu-latest
+    needs: quality-regression-tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate cliché detection accuracy
+        run: |
+          node packages/testing/scripts/validate-cliche-accuracy.js
+        env:
+          NODE_ENV: test
+          QUALITY_THRESHOLD_STRICT: true
+
+      - name: Check for regression in cliché thresholds
+        run: |
+          # Compare current results with baseline
+          if [ -f "packages/testing/baselines/cliche-baseline.json" ]; then
+            node packages/testing/scripts/compare-with-baseline.js cliche
+          fi
+
+  stylometry-validation:
+    name: Stylometry Distance Validation  
+    runs-on: ubuntu-latest
+    needs: quality-regression-tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate stylometry calculations
+        run: |
+          node packages/testing/scripts/validate-stylometry.js
+        env:
+          NODE_ENV: test
+
+      - name: Check stylometry threshold regression
+        run: |
+          if [ -f "packages/testing/baselines/stylometry-baseline.json" ]; then
+            node packages/testing/scripts/compare-with-baseline.js stylometry
+          fi
+
+  quality-gates-summary:
+    name: Quality Gates Summary
+    runs-on: ubuntu-latest
+    needs: [quality-regression-tests, cliche-density-validation, stylometry-validation]
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate quality report
+        run: |
+          echo "# Quality Gates Report" >> quality-report.md
+          echo "" >> quality-report.md
+          echo "## Test Results" >> quality-report.md
+          echo "- Quality Regression Tests: ${{ needs.quality-regression-tests.result }}" >> quality-report.md
+          echo "- Cliché Density Validation: ${{ needs.cliche-density-validation.result }}" >> quality-report.md  
+          echo "- Stylometry Validation: ${{ needs.stylometry-validation.result }}" >> quality-report.md
+          echo "" >> quality-report.md
+          echo "Generated on: $(date)" >> quality-report.md
+
+      - name: Comment PR with quality report
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('quality-report.md', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+
+      - name: Fail if any quality gate failed
+        run: |
+          if [[ "${{ needs.quality-regression-tests.result }}" != "success" || 
+                "${{ needs.cliche-density-validation.result }}" != "success" || 
+                "${{ needs.stylometry-validation.result }}" != "success" ]]; then
+            echo "Quality gates failed. Check the detailed reports above."
+            exit 1
+          fi
+          echo "All quality gates passed successfully!"

@@ -1,0 +1,20 @@
+{
+  "name": "@speechwriter/analytics",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Analytics and telemetry utilities for SpeechWriter",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "posthog-js": "1.261.6",
+    "posthog-node": "5.8.1",
+    "@speechwriter/database": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3"
+  }
+}

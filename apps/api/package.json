@@ -10,16 +10,21 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@speechwriter/config": "workspace:*",
-    "@netlify/functions": "^2.4.1",
     "@anthropic-ai/sdk": "^0.17.0",
+    "@netlify/functions": "^2.4.1",
+    "@speechwriter/config": "workspace:*",
+    "@speechwriter/database": "workspace:*",
+    "cors": "^2.8.5",
+    "drizzle-orm": "^0.29.0",
+    "jsonwebtoken": "^9.0.0",
     "openai": "^4.26.0",
-    "zod": "^3.22.4",
-    "cors": "^2.8.5"
+    "postgres": "^3.4.0",
+    "stripe": "18.5.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
     "@types/cors": "^2.8.17",
-    "@types/aws-lambda": "^8.10.132",
     "netlify-lambda": "^2.0.16"
   }
 }

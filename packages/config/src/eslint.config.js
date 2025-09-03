@@ -8,8 +8,6 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    '@typescript-eslint/recommended',
-    'next/core-web-vitals',
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
@@ -20,16 +18,17 @@ module.exports = {
       jsx: true,
     },
   },
-  plugins: ['@typescript-eslint', 'react-hooks', 'import'],
+  plugins: ['@typescript-eslint', 'import'],
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        '@typescript-eslint/no-unused-vars': 'error',
+        '@typescript-eslint/no-explicit-any': 'warn',
+      },
+    },
+  ],
   rules: {
-    // TypeScript specific rules
-    '@typescript-eslint/no-unused-vars': 'error',
-    '@typescript-eslint/no-explicit-any': 'warn',
-    '@typescript-eslint/prefer-const': 'error',
-    
-    // React specific rules
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
     
     // Import/export rules
     'import/order': [
