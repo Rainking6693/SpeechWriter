@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  swcMinify: true,
+  swcMinify: false,
   
   // Disable ESLint and TypeScript during build for now
   eslint: {
@@ -11,13 +11,11 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Disable static generation that's causing React errors
-  trailingSlash: true,
+  // Disable all static optimization
+  output: 'standalone',
   
-  // Enable experimental features
-  experimental: {
-    turbo: false,
-  },
+  // Disable experimental features causing React corruption
+  experimental: {},
   
   // Webpack configuration
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
