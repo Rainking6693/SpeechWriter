@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, ReactNode } from 'react';
-import { initAnalytics, clientAnalytics, AnalyticsEvent } from '@speechwriter/analytics';
+import { initAnalytics, clientAnalytics, AnalyticsEvent } from '@speechwriter/analytics/client';
 import { useSession } from 'next-auth/react';
 
 interface AnalyticsContextType {

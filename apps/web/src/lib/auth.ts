@@ -1,4 +1,4 @@
-import { NextAuthOptions } from 'next-auth'
+import NextAuth, { NextAuthOptions } from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import GoogleProvider from 'next-auth/providers/google'
 import EmailProvider from 'next-auth/providers/email'
@@ -130,3 +130,6 @@ declare module 'next-auth/jwt' {
     accessToken?: string
   }
 }
+
+// Export the configured NextAuth instance
+export const auth = NextAuth(authOptions)

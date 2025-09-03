@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { personas, styleCards, stylometryData } from '@speechwriter/database/schema'
+import { personas, styleCards, stylometryData } from '@speechwriter/database/src/schema/personas'
 import { eq, and } from 'drizzle-orm'
 import { z } from 'zod'
 

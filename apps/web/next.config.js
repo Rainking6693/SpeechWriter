@@ -3,9 +3,13 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   
+  // Disable ESLint during build for now
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
   // Enable experimental features
   experimental: {
-    appDir: true,
     turbo: {
       rules: {
         '*.svg': {

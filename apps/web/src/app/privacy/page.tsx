@@ -20,7 +20,38 @@ import {
   CheckCircle,
   Mail,
 } from 'lucide-react';
-import { PrivacyComplianceService, PRIVACY_COMPLIANCE_CHECKLIST } from '@speechwriter/security';
+// Removed server-side import - privacy compliance logic will be handled via API routes
+
+// Hardcoded privacy compliance data for now (would come from API in production)
+const PRIVACY_COMPLIANCE_CHECKLIST = {
+  dataCollection: {
+    title: 'Data Collection',
+    items: [
+      'Minimal personal data collection',
+      'Clear purpose for each data point',
+      'User consent for optional data',
+      'No sensitive data without explicit consent'
+    ]
+  },
+  dataProtection: {
+    title: 'Data Protection',
+    items: [
+      'Encryption at rest and in transit',
+      'Access controls and authentication',
+      'Regular security audits',
+      'Data breach response plan'
+    ]
+  },
+  userRights: {
+    title: 'User Rights',
+    items: [
+      'Right to access personal data',
+      'Right to rectify incorrect data',
+      'Right to delete personal data',
+      'Right to data portability'
+    ]
+  }
+};
 
 interface UserLocation {
   country?: string;
@@ -49,9 +80,26 @@ export default function PrivacyPage() {
     setUserLocation({ jurisdiction });
   }, []);
 
-  const privacyNotice = PrivacyComplianceService.generatePrivacyNotice(userLocation.jurisdiction);
-  const cookieInfo = PrivacyComplianceService.generateCookieConsent(userLocation.jurisdiction);
-  const requiresConsent = PrivacyComplianceService.requiresExplicitConsent(userLocation.jurisdiction);
+  // Hardcoded privacy data for now (would come from API in production)
+  const privacyNotice = {
+    jurisdiction: userLocation.jurisdiction || 'US',
+    lastUpdated: '2024-01-01',
+    dataRetentionPeriod: 365,
+    contactEmail: 'privacy@speechwriter.com',
+    applicableLaws: ['GDPR', 'CCPA'],
+    rightToDelete: true,
+    rightToAccess: true,
+    rightToPortability: true
+  };
+  
+  const cookieInfo = {
+    essential: ['authentication', 'security'],
+    functional: ['preferences', 'language'],
+    analytics: ['usage_analytics', 'performance'],
+    marketing: []
+  };
+  
+  const requiresConsent = ['EU', 'UK'].includes(userLocation.jurisdiction || '');
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
