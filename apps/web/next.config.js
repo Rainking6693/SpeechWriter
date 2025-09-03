@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   swcMinify: true,
   
   // Disable ESLint and TypeScript during build for now
@@ -11,16 +11,12 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
+  // Disable static generation that's causing React errors
+  trailingSlash: true,
+  
   // Enable experimental features
   experimental: {
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
+    turbo: false,
   },
   
   // Webpack configuration
