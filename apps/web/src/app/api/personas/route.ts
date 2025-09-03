@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { personas, styleCards } from '@speechwriter/database/schema'
-import { eq } from 'drizzle-orm'
+import { eq, or } from 'drizzle-orm'
 import { z } from 'zod'
 
 const toneSliderSchema = z.object({
@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
         .select()
         .from(personas)
         .where(
-          eq(personas.userId, session.user.id).or(eq(personas.isPreset, true))
+          or(eq(personas.userId, session.user.id), eq(personas.isPreset, true))
         )
     }
 

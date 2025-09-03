@@ -6,9 +6,15 @@ import { eq, and, sql } from 'drizzle-orm'
 import { z } from 'zod'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Initialize OpenAI client only when needed
+const getOpenAIClient = () => {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY environment variable is required')
+  }
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+}
 
 const searchSchema = z.object({
   query: z.string().min(1).max(1000),
@@ -21,6 +27,7 @@ const searchSchema = z.object({
 
 async function generateEmbedding(text: string): Promise<number[]> {
   try {
+    const openai = getOpenAIClient()
     const response = await openai.embeddings.create({
       model: 'text-embedding-ada-002',
       input: text,
@@ -65,7 +72,24 @@ export async function POST(request: NextRequest) {
     // Note: In a real implementation, you'd use pgvector's <-> operator
     // For now, we'll do a simplified search and return stories with basic filtering
     
-    let query = db
+    // Build all where conditions
+    const whereConditions = [
+      eq(stories.userId, session.user.id),
+      sql`${stories.sensitivityLevel} = ANY(${sensitivityLevels})`
+    ]
+    
+    // Add optional filters
+    if (validatedData.theme) {
+      whereConditions.push(eq(stories.theme, validatedData.theme))
+    }
+    if (validatedData.emotion) {
+      whereConditions.push(eq(stories.emotion, validatedData.emotion))
+    }
+    if (validatedData.audienceType) {
+      whereConditions.push(eq(stories.audienceType, validatedData.audienceType))
+    }
+    
+    const query = db
       .select({
         id: stories.id,
         title: stories.title,
@@ -81,24 +105,8 @@ export async function POST(request: NextRequest) {
       })
       .from(stories)
       .innerJoin(storyEmbeddings, eq(stories.id, storyEmbeddings.storyId))
-      .where(
-        and(
-          eq(stories.userId, session.user.id),
-          sql`${stories.sensitivityLevel} = ANY(${sensitivityLevels})`
-        )
-      )
+      .where(and(...whereConditions))
       .limit(validatedData.limit)
-
-    // Add optional filters
-    if (validatedData.theme) {
-      query = query.where(eq(stories.theme, validatedData.theme))
-    }
-    if (validatedData.emotion) {
-      query = query.where(eq(stories.emotion, validatedData.emotion))
-    }
-    if (validatedData.audienceType) {
-      query = query.where(eq(stories.audienceType, validatedData.audienceType))
-    }
 
     // For now, order by updated time until we have proper vector search
     const relevantStories = await query.orderBy(stories.updatedAt)

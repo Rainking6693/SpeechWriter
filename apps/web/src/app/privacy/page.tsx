@@ -89,13 +89,56 @@ export default function PrivacyPage() {
     applicableLaws: ['GDPR', 'CCPA'],
     rightToDelete: true,
     rightToAccess: true,
-    rightToPortability: true
+    rightToPortability: true,
+    title: 'Privacy Notice',
+    content: `Privacy Policy for SpeechWriter
+
+Last updated: ${new Date().toISOString().split('T')[0]}
+
+This privacy policy describes how SpeechWriter ("we", "us", or "our") collects, uses, and protects your personal information when you use our AI-powered speech writing platform.
+
+Information We Collect:
+- Account information (name, email, authentication data)
+- Speech content and writing preferences
+- Usage data and analytics
+- Technical information (IP address, browser type, device info)
+
+How We Use Your Information:
+- To provide and improve our speech writing services
+- To personalize your experience and recommendations
+- To communicate with you about your account and our services
+- To ensure platform security and prevent fraud
+
+Data Protection:
+We implement industry-standard security measures to protect your personal information, including encryption in transit and at rest, secure authentication systems, and regular security audits.
+
+Your Rights:
+Depending on your location, you may have rights including:
+- Right to access your personal data
+- Right to correct or update your information
+- Right to delete your account and data
+- Right to data portability
+- Right to withdraw consent
+
+Contact Information:
+For privacy-related questions or to exercise your rights, contact us at privacy@speechwriter.com.
+
+This policy is subject to change. We will notify you of any material changes.`
   };
   
   const cookieInfo = {
-    essential: ['authentication', 'security'],
-    functional: ['preferences', 'language'],
-    analytics: ['usage_analytics', 'performance'],
+    essential: [
+      { name: 'authentication', purpose: 'User authentication and session management', expiry: 'Session' },
+      { name: 'security', purpose: 'CSRF protection and security tokens', expiry: '24 hours' }
+    ],
+    functional: [
+      { name: 'preferences', purpose: 'User interface preferences and settings', expiry: '30 days' },
+      { name: 'language', purpose: 'Preferred language settings', expiry: '30 days' }
+    ],
+    analytics: [
+      { name: 'usage_analytics', purpose: 'Anonymous usage statistics', expiry: '90 days' },
+      { name: 'performance', purpose: 'Performance monitoring and optimization', expiry: '30 days' }
+    ],
     marketing: []
   };
   

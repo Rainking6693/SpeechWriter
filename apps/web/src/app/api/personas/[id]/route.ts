@@ -1,5 +1,5 @@
 import { personas, styleCards } from '@speechwriter/database/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, or, ne } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -45,7 +45,7 @@ export async function GET(
       .where(
         and(
           eq(personas.id, params.id),
-          eq(personas.userId, session.user.id).or(eq(personas.isPreset, true))
+          or(eq(personas.userId, session.user.id), eq(personas.isPreset, true))
         )
       )
       .limit(1);
@@ -109,7 +109,7 @@ export async function PATCH(
         .where(
           and(
             eq(personas.userId, session.user.id),
-            eq(personas.id, params.id).not()
+            ne(personas.id, params.id)
           )
         );
     }
