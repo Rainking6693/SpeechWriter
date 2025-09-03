@@ -1,20 +1,21 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { stories, storyEmbeddings } from '@speechwriter/database/schema'
-import { eq, and, sql } from 'drizzle-orm'
-import { z } from 'zod'
-import OpenAI from 'openai'
+import { stories, storyEmbeddings } from '@speechwriter/database/schema';
+import { eq, and, sql } from 'drizzle-orm';
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
-// Initialize OpenAI client only when needed
-const getOpenAIClient = () => {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error('OPENAI_API_KEY environment variable is required')
-  }
-  return new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
-}
+import { auth } from '@/lib/auth';
+import { db } from '@/lib/db';
+// import OpenAI from 'openai' // Temporarily disabled for build compatibility
+
+// Initialize OpenAI client only when needed - temporarily disabled for build compatibility
+// const getOpenAIClient = () => {
+//   if (!process.env.OPENAI_API_KEY) {
+//     throw new Error('OPENAI_API_KEY environment variable is required')
+//   }
+//   return new OpenAI({
+//     apiKey: process.env.OPENAI_API_KEY,
+//   })
+// }
 
 const searchSchema = z.object({
   query: z.string().min(1).max(1000),
@@ -23,72 +24,78 @@ const searchSchema = z.object({
   audienceType: z.string().optional(),
   maxSensitivityLevel: z.enum(['low', 'medium', 'high']).default('high'),
   limit: z.number().min(1).max(20).default(5),
-})
+});
 
-async function generateEmbedding(text: string): Promise<number[]> {
-  try {
-    const openai = getOpenAIClient()
-    const response = await openai.embeddings.create({
-      model: 'text-embedding-ada-002',
-      input: text,
-    })
-    
-    return response.data[0].embedding
-  } catch (error) {
-    console.error('Error generating embedding:', error)
-    throw new Error('Failed to generate embedding')
-  }
-}
+// Temporarily disabled embedding functions for build compatibility
+// async function generateEmbedding(text: string): Promise<number[]> {
+//   try {
+//     const openai = getOpenAIClient()
+//     const response = await openai.embeddings.create({
+//       model: 'text-embedding-ada-002',
+//       input: text,
+//     })
+//
+//     return response.data[0].embedding
+//   } catch (error) {
+//     console.error('Error generating embedding:', error)
+//     throw new Error('Failed to generate embedding')
+//   }
+// }
 
-function vectorToString(vector: number[]): string {
-  return `[${vector.join(',')}]`
-}
+// function vectorToString(vector: number[]): string {
+//   return `[${vector.join(',')}]`
+// }
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth()
-    
+    const session = await auth();
+
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json()
-    const validatedData = searchSchema.parse(body)
+    const body = await request.json();
+    const validatedData = searchSchema.parse(body);
 
-    // Generate embedding for the search query
-    const queryEmbedding = await generateEmbedding(validatedData.query)
-    const queryEmbeddingStr = vectorToString(queryEmbedding)
+    // Generate embedding for the search query (temporarily disabled for build)
+    // const queryEmbedding = await generateEmbedding(validatedData.query)
+    // const queryEmbeddingStr = vectorToString(queryEmbedding)
 
     // Build sensitivity level filter
-    const sensitivityLevels = ['low']
-    if (validatedData.maxSensitivityLevel === 'medium' || validatedData.maxSensitivityLevel === 'high') {
-      sensitivityLevels.push('medium')
+    const sensitivityLevels = ['low'];
+    if (
+      validatedData.maxSensitivityLevel === 'medium' ||
+      validatedData.maxSensitivityLevel === 'high'
+    ) {
+      sensitivityLevels.push('medium');
     }
     if (validatedData.maxSensitivityLevel === 'high') {
-      sensitivityLevels.push('high')
+      sensitivityLevels.push('high');
     }
 
     // Perform vector similarity search using pgvector
     // Note: In a real implementation, you'd use pgvector's <-> operator
     // For now, we'll do a simplified search and return stories with basic filtering
-    
+
     // Build all where conditions
     const whereConditions = [
       eq(stories.userId, session.user.id),
-      sql`${stories.sensitivityLevel} = ANY(${sensitivityLevels})`
-    ]
-    
+      sql`${stories.sensitivityLevel} = ANY(${sensitivityLevels})`,
+    ];
+
     // Add optional filters
     if (validatedData.theme) {
-      whereConditions.push(eq(stories.theme, validatedData.theme))
+      whereConditions.push(eq(stories.theme, validatedData.theme));
     }
     if (validatedData.emotion) {
-      whereConditions.push(eq(stories.emotion, validatedData.emotion))
+      whereConditions.push(eq(stories.emotion, validatedData.emotion));
     }
     if (validatedData.audienceType) {
-      whereConditions.push(eq(stories.audienceType, validatedData.audienceType))
+      whereConditions.push(
+        eq(stories.audienceType, validatedData.audienceType)
+      );
     }
-    
+
     const query = db
       .select({
         id: stories.id,
@@ -106,10 +113,10 @@ export async function POST(request: NextRequest) {
       .from(stories)
       .innerJoin(storyEmbeddings, eq(stories.id, storyEmbeddings.storyId))
       .where(and(...whereConditions))
-      .limit(validatedData.limit)
+      .limit(validatedData.limit);
 
     // For now, order by updated time until we have proper vector search
-    const relevantStories = await query.orderBy(stories.updatedAt)
+    const relevantStories = await query.orderBy(stories.updatedAt);
 
     // TODO: Implement proper pgvector similarity search
     // This would require:
@@ -121,21 +128,20 @@ export async function POST(request: NextRequest) {
       query: validatedData.query,
       stories: relevantStories,
       totalFound: relevantStories.length,
-    })
-
+    });
   } catch (error) {
-    console.error('Error searching stories:', error)
-    
+    // Error searching stories - handled below
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid input data', details: error.errors },
         { status: 400 }
-      )
+      );
     }
-    
+
     return NextResponse.json(
       { error: 'Failed to search stories' },
       { status: 500 }
-    )
+    );
   }
 }
