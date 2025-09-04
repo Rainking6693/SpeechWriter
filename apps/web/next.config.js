@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
-  swcMinify: false,
+  reactStrictMode: true,
+  swcMinify: true,
   
   // Disable ESLint and TypeScript during build for now
   eslint: {
@@ -11,21 +11,26 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Disable static generation completely to fix React hook issues
+  // Use standard build for Netlify
   output: 'standalone',
   
-  // Disable experimental features causing React corruption
+  // Minimal experimental config
   experimental: {
-    esmExternals: false,
-    appDir: true
+    esmExternals: false
   },
-  
-  // Force dynamic rendering for all pages
-  generateStaticParams: false,
   
   // Webpack configuration
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Fix for React hooks issues during build
+    // Fix for React JSX runtime resolution
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'react': require.resolve('react'),
+      'react-dom': require.resolve('react-dom'),
+      'react/jsx-runtime': require.resolve('react/jsx-runtime'),
+      'react/jsx-dev-runtime': require.resolve('react/jsx-dev-runtime'),
+    }
+    
+    // Fix for server-side fallbacks
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -33,20 +38,6 @@ const nextConfig = {
         net: false,
         tls: false,
       }
-    }
-    
-    // Ensure React is properly resolved
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'react': require.resolve('react'),
-      'react-dom': require.resolve('react-dom'),
-    }
-    
-    // Disable static optimization completely
-    config.optimization = {
-      ...config.optimization,
-      usedExports: false,
-      sideEffects: false,
     }
     
     return config;
