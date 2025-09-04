@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
+  reactStrictMode: false,
+  swcMinify: false,
   
   // Disable ESLint and TypeScript during build for now
   eslint: {
@@ -11,13 +11,17 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Standard build for Netlify
-  // output: 'export', // Removed for now to fix build issues
+  // Disable static generation completely to fix React hook issues
+  output: 'standalone',
   
   // Disable experimental features causing React corruption
   experimental: {
-    esmExternals: false
+    esmExternals: false,
+    appDir: true
   },
+  
+  // Force dynamic rendering for all pages
+  generateStaticParams: false,
   
   // Webpack configuration
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
@@ -36,6 +40,13 @@ const nextConfig = {
       ...config.resolve.alias,
       'react': require.resolve('react'),
       'react-dom': require.resolve('react-dom'),
+    }
+    
+    // Disable static optimization completely
+    config.optimization = {
+      ...config.optimization,
+      usedExports: false,
+      sideEffects: false,
     }
     
     return config;

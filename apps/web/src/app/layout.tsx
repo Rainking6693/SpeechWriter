@@ -5,6 +5,10 @@ import { AuthProvider } from '@/components/providers/auth-provider'
 import { AnalyticsProvider } from '@/lib/analytics-provider'
 import { Toaster } from '@/components/ui/toaster'
 
+// Force dynamic rendering for entire app
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
