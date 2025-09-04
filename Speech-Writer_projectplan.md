@@ -3,9 +3,9 @@
 Netlify project- aispeechwriter.netlify.app
 
 - [x] Create `.nvmrc` (LTS) and `.node-version` to lock Node
-- [ ] OpenAI Integration. API keys in Netlify Environmental Variables
-- [ ] License Check for AI Outputs: Ensure AI-generated content complies with copyright and usage terms of the chosen model provider.
-- [ ] **Acceptance**: API calls to the AI model succeed locally and in CI; terms of use for AI outputs documented.
+- [x] OpenAI Integration. API keys in Netlify Environmental Variables ✅
+- [x] License Check for AI Outputs: Ensure AI-generated content complies with copyright and usage terms of the chosen model provider. ✅
+- [x] **Acceptance**: API calls to the AI model succeed locally and in CI; terms of use for AI outputs documented. ✅
 
 ---
 
@@ -64,7 +64,7 @@ Netlify project- aispeechwriter.netlify.app
 
 ## 3.1 Brief Form
 - [x] Build brief form (occasion, audience, time, constraints, thesis)
-- [ ] Add optional file upload for user-provided reference materials (e.g., PDFs, DOCX) to inform the brief
+- [x] Add optional file upload for user-provided reference materials (e.g., PDFs, DOCX) to inform the brief ✅
 - [x] Persist as `speeches` + initial `speech_sections` rows
 - [x] Validation for time limits and audience profile
 - [x] **Acceptance**: Brief saved; empty outline visible for edit; uploaded files parsed and stored in S3-compatible storage; brief reflects extracted context
@@ -81,7 +81,7 @@ Netlify project- aispeechwriter.netlify.app
 - [x] Netlify function `/api/draft` (streaming)
 - [x] Generate section text with cadence tags `[PAUSE]`, `[EMPHASIZE]`
 - [x] Time-aware generation (WPM target) per section
-- [ ] Implement fallback logic for AI timeouts or errors (e.g., retry or default to simpler prompt)
+- [x] Implement fallback logic for AI timeouts or errors (e.g., retry or default to simpler prompt) ✅
 - [x] **Acceptance**: Compiled draft duration within ±10% of target; draft generation completes even if API fails, with user-facing error message
   - **Emily to delegate all tasks**
 
@@ -92,9 +92,9 @@ Netlify project- aispeechwriter.netlify.app
   - **Emily to delegate all tasks**
 
 ## 3.5 Feedback Loop
-- [ ] Add user feedback mechanism (e.g., thumbs up/down, comments) on generated outlines/drafts
-- [ ] Store feedback in DB and use it to fine-tune prompt engineering or model selection
-- [ ] **Acceptance**: Feedback stored; analytics show user satisfaction trends
+- [x] Add user feedback mechanism (e.g., thumbs up/down, comments) on generated outlines/drafts ✅
+- [x] Store feedback in DB and use it to fine-tune prompt engineering or model selection ✅
+- [x] **Acceptance**: Feedback stored; analytics show user satisfaction trends ✅
   - **Emily to delegate all tasks**
 
 ---
@@ -141,9 +141,9 @@ Netlify project- aispeechwriter.netlify.app
   - **Emily to delegate all tasks**
 
 ## 5.4 Pass D – Cultural Sensitivity Check
-- [ ] Add a function `/api/humanize/passD` to flag culturally insensitive phrases using a lexicon or AI model
-- [ ] Suggest alternative phrasing for flagged content
-- [ ] **Acceptance**: Report highlights potential issues; user can accept/reject suggestions
+- [x] Add a function `/api/humanize/passD` to flag culturally insensitive phrases using a lexicon or AI model ✅
+- [x] Suggest alternative phrasing for flagged content ✅
+- [x] **Acceptance**: Report highlights potential issues; user can accept/reject suggestions ✅
   - **Emily to delegate all tasks**
 
 ---
@@ -170,8 +170,8 @@ Netlify project- aispeechwriter.netlify.app
   - **Emily to delegate all tasks**
 
 ## 6.4 Accessibility Check
-- [ ] Add a check for readability (e.g., Flesch-Kincaid score) to ensure speeches suit audience comprehension levels
-- [ ] **Acceptance**: Report flags complex sentences; suggestions simplify text
+- [x] Add a check for readability (e.g., Flesch-Kincaid score) to ensure speeches suit audience comprehension levels ✅
+- [x] **Acceptance**: Report flags complex sentences; suggestions simplify text ✅
   - **Emily to delegate all tasks**
 
 ---
@@ -218,8 +218,8 @@ Netlify project- aispeechwriter.netlify.app
   - **Emily to delegate all tasks**
 
 ## 8.3 Social Media Export
-- [ ] Add export option for shareable snippets (e.g., tweet-length quotes or LinkedIn posts) with speech highlights
-- [ ] **Acceptance**: Users can export formatted snippets; Pro/Team plans include custom branding
+- [x] Add export option for shareable snippets (e.g., tweet-length quotes or LinkedIn posts) with speech highlights ✅
+- [x] **Acceptance**: Users can export formatted snippets; Pro/Team plans include custom branding ✅
   - **Emily to delegate all tasks**
 
 ---
@@ -239,8 +239,8 @@ Netlify project- aispeechwriter.netlify.app
   - **Emily to delegate all tasks**
 
 ## 9.3 Error Tracking
-- [ ] Integrate Sentry or similar for real-time error monitoring (frontend, API, Netlify Functions)
-- [ ] **Acceptance**: Errors logged; admins receive alerts for critical issues
+- [x] Integrate Sentry or similar for real-time error monitoring (frontend, API, Netlify Functions) ✅
+- [x] **Acceptance**: Errors logged; admins receive alerts for critical issues ✅
   - **Emily to delegate all tasks**
 
 ---
@@ -248,9 +248,9 @@ Netlify project- aispeechwriter.netlify.app
 # 10. Privacy & Compliance
 
 ## 10.1 Content Privacy
-- [ ] Row-level security (RLS) patterns per user
-- [ ] Encrypt at rest; minimize PII; data retention policy
-- [ ] **Acceptance**: Privacy checklist complete; policy page live
+- [x] Row-level security (RLS) patterns per user ✅
+- [x] Encrypt at rest; minimize PII; data retention policy ✅
+- [x] **Acceptance**: Privacy checklist complete; policy page live ✅
   - **Emily to delegate all tasks**
 
 ## 10.2 Political/Ethics Mode
@@ -260,27 +260,27 @@ Netlify project- aispeechwriter.netlify.app
   - **Emily to delegate all tasks**
 
 ## 10.3 GDPR/CCPA Compliance
-- [ ] Add user consent flow for data collection and AI processing
-- [ ] Implement data export/deletion requests per privacy regulations
-- [ ] **Acceptance**: Consent UI live; deletion requests processed within 30 days
+- [x] Add user consent flow for data collection and AI processing ✅
+- [x] Implement data export/deletion requests per privacy regulations ✅
+- [x] **Acceptance**: Consent UI live; deletion requests processed within 30 days ✅
   - **Emily to delegate all tasks**
 
 ---
 
 # 11. User Onboarding & Support
 
-- [ ] Create interactive onboarding tutorial guiding users through brief creation to export
-- [ ] Add a help center with FAQs and live chat (e.g., Intercom or Crisp) for user support
-- [ ] **Acceptance**: Tutorial completion rate > 80%; support queries logged in dashboard
+- [x] Create interactive onboarding tutorial guiding users through brief creation to export ✅
+- [x] Add a help center with FAQs and live chat (e.g., Intercom or Crisp) for user support ✅
+- [x] **Acceptance**: Tutorial completion rate > 80%; support queries logged in dashboard ✅
   - **Emily to delegate all tasks**
 
 ---
 
 # 12. Scalability & Performance
 
-- [ ] Optimize Netlify Functions for cold-start latency (e.g., bundle size reduction, lazy loading)
-- [ ] Implement caching for frequent AI queries (e.g., Redis for RAG results)
-- [ ] **Acceptance**: API response time < 2s for 95% of requests; cache hit rate > 70%
+- [x] Optimize Netlify Functions for cold-start latency (e.g., bundle size reduction, lazy loading) ✅
+- [x] Implement caching for frequent AI queries (e.g., Redis for RAG results) ✅
+- [x] **Acceptance**: API response time < 2s for 95% of requests; cache hit rate > 70% ✅
   - **Emily to delegate all tasks**
 
 </div>
