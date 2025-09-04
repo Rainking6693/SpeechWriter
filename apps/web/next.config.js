@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
-  swcMinify: false,
+  reactStrictMode: true,
+  swcMinify: true,
   
   // Disable ESLint and TypeScript during build for now
   eslint: {
@@ -11,21 +11,40 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Disable all static optimization
-  output: 'standalone',
+  // Standard build for Netlify
+  // output: 'export', // Removed for now to fix build issues
   
   // Disable experimental features causing React corruption
-  experimental: {},
+  experimental: {
+    esmExternals: false
+  },
   
   // Webpack configuration
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Custom webpack config here if needed
+    // Fix for React hooks issues during build
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      }
+    }
+    
+    // Ensure React is properly resolved
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'react': require.resolve('react'),
+      'react-dom': require.resolve('react-dom'),
+    }
+    
     return config;
   },
   
   // Environment variables
   env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   },
   
   // Image optimization

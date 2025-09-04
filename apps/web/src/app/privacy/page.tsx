@@ -66,18 +66,20 @@ export default function PrivacyPage() {
   useEffect(() => {
     // Detect user location (in production, this would use a geolocation service)
     // For now, we'll simulate based on browser language
-    const language = navigator.language.toLowerCase();
-    let jurisdiction: 'EU' | 'CA' | 'US' | 'OTHER' = 'OTHER';
-    
-    if (language.includes('en-us')) {
-      jurisdiction = 'US';
-    } else if (language.includes('en-ca') || language.includes('fr-ca')) {
-      jurisdiction = 'CA';
-    } else if (language.match(/(de|fr|es|it|nl|pt|pl|sv|da|no|fi)-/)) {
-      jurisdiction = 'EU';
+    if (typeof window !== 'undefined' && navigator) {
+      const language = navigator.language.toLowerCase();
+      let jurisdiction: 'EU' | 'CA' | 'US' | 'OTHER' = 'OTHER';
+      
+      if (language.includes('en-us')) {
+        jurisdiction = 'US';
+      } else if (language.includes('en-ca') || language.includes('fr-ca')) {
+        jurisdiction = 'CA';
+      } else if (language.match(/(de|fr|es|it|nl|pt|pl|sv|da|no|fi)-/)) {
+        jurisdiction = 'EU';
+      }
+      
+      setUserLocation({ jurisdiction });
     }
-    
-    setUserLocation({ jurisdiction });
   }, []);
 
   // Hardcoded privacy data for now (would come from API in production)
