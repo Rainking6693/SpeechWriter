@@ -1,8 +1,8 @@
 'use client'
 
+import React, { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
 import { SpeechList } from '@/components/dashboard/speech-list'
 import { CreateSpeechButton } from '@/components/dashboard/create-speech-button'

@@ -1,0 +1,1 @@
+{\n  \"presets\": [\n    [\n      \"next/babel\",\n      {\n        \"preset-react\": {\n          \"runtime\": \"classic\"\n        }\n      }\n    ]\n  ]\n}\n

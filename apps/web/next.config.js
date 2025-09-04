@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
+  reactStrictMode: false,
+  swcMinify: false,
   
   // Disable ESLint and TypeScript during build for now
   eslint: {
@@ -14,33 +14,18 @@ const nextConfig = {
   // Use standard build for Netlify
   output: 'standalone',
   
-  // Minimal experimental config
-  experimental: {
-    esmExternals: false
+  // Disable SWC completely
+  swcMinify: false,
+  compiler: {
+    // Disable SWC transforms
+    styledComponents: false,
+    emotion: false,
   },
   
-  // Webpack configuration
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Fix for React JSX runtime resolution
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'react': require.resolve('react'),
-      'react-dom': require.resolve('react-dom'),
-      'react/jsx-runtime': require.resolve('react/jsx-runtime'),
-      'react/jsx-dev-runtime': require.resolve('react/jsx-dev-runtime'),
-    }
-    
-    // Fix for server-side fallbacks
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-      }
-    }
-    
-    return config;
+  // Minimal experimental config
+  experimental: {
+    esmExternals: false,
+    forceSwcTransforms: false
   },
   
   // Environment variables

@@ -1,8 +1,8 @@
 'use client'
 
+import React, { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { ComplianceSettings } from '@/components/settings/compliance-settings';
 
 export default function SettingsPage() {
