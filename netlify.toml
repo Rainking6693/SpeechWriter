@@ -4,26 +4,11 @@
   publish = "apps/web/out"
   
   # Environment variables - Use stable versions
-  environment = { 
-    NODE_VERSION = "18.19.0", 
-    PNPM_VERSION = "8.15.0",
-    PYTHON_VERSION = "3.11",
+  [build.environment]
+    NODE_VERSION = "18.19.0"
+    PNPM_VERSION = "8.15.0"
+    PYTHON_VERSION = "3.11"
     NPM_FLAGS = "--legacy-peer-deps"
-  }
-
-[build.processing]
-  skip_processing = false
-
-[build.processing.css]
-  bundle = true
-  minify = true
-
-[build.processing.js]
-  bundle = true
-  minify = true
-
-[build.processing.html]
-  pretty_urls = true
 
 # API Functions (Netlify Functions)
 [functions]
@@ -31,7 +16,7 @@
   node_bundler = "esbuild"
   external_node_modules = ["@anthropic-ai/sdk", "openai", "@aws-sdk/client-s3"]
 
-# Headers for security and performance
+# Basic security headers
 [[headers]]
   for = "/*"
   [headers.values]
@@ -39,9 +24,6 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
-    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://*.stripe.com https://api.openai.com https://api.anthropic.com; frame-src https://*.stripe.com;"
 
 # Cache static assets
 [[headers]]
@@ -55,77 +37,24 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# API rate limiting headers
-[[headers]]
-  for = "/api/*"
-  [headers.values]
-    X-RateLimit-Limit = "100"
-    X-RateLimit-Window = "900"
-    Access-Control-Allow-Origin = "*"
-    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
-    Access-Control-Allow-Headers = "Content-Type, Authorization"
-
-# Environment-specific settings
-[context.production]
-  command = "pnpm build"
-  environment = { NODE_ENV = "production" }
-  
-[context.deploy-preview]
-  command = "pnpm build"
-  environment = { NODE_ENV = "preview" }
-  
-[context.branch-deploy]
-  command = "pnpm build"
-  environment = { NODE_ENV = "development" }
-
-# Redirects and rewrites
+# API redirects to functions
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
 
-# Auth redirects (for future use)
-[[redirects]]
-  from = "/auth/*"
-  to = "/.netlify/functions/auth/:splat"
-  status = 200
+# Environment-specific settings
+[context.production]
+  command = "pnpm build"
+  [context.production.environment]
+    NODE_ENV = "production"
 
-# Stripe webhook redirect
-[[redirects]]
-  from = "/api/stripe/webhook"
-  to = "/.netlify/functions/stripe-webhook"
-  status = 200
+[context.deploy-preview]
+  command = "pnpm build"
+  [context.deploy-preview.environment]
+    NODE_ENV = "preview"
 
-# Health check
-[[redirects]]
-  from = "/health"
-  to = "/.netlify/functions/health"
-  status = 200
-
-# SPA fallback for client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  conditions = {Role = ["admin", "editor"]}
-
-# Form handling
-[forms]
-  spam_detection = true
-
-# Edge functions for enhanced performance (if needed)
-# [[edge_functions]]
-#   function = "geolocation"
-#   path = "/api/location/*"
-
-# Plugin configuration - Removed @netlify/plugin-nextjs to avoid Sharp dependency issues
-# [[plugins]]
-#   package = "@netlify/plugin-nextjs"
-
-# Development proxy for local testing
-[dev]
-  command = "pnpm dev"
-  port = 3000
-  targetPort = 3000
-  publish = "apps/web/.next"
-  autoLaunch = true
+[context.branch-deploy]
+  command = "pnpm build"
+  [context.branch-deploy.environment]
+    NODE_ENV = "development"
