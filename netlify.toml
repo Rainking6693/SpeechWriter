@@ -1,10 +1,15 @@
 [build]
   base = "."
   command = "pnpm build"
-  publish = "apps/web/.next"
+  publish = "apps/web/out"
   
-  # Environment variables
-  environment = { NODE_VERSION = "20.11.0", PNPM_VERSION = "8.15.0" }
+  # Environment variables - Use stable versions
+  environment = { 
+    NODE_VERSION = "18.19.0", 
+    PNPM_VERSION = "8.15.0",
+    PYTHON_VERSION = "3.11",
+    NPM_FLAGS = "--legacy-peer-deps"
+  }
 
 [build.processing]
   skip_processing = false
@@ -113,9 +118,9 @@
 #   function = "geolocation"
 #   path = "/api/location/*"
 
-# Plugin configuration
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+# Plugin configuration - Removed @netlify/plugin-nextjs to avoid Sharp dependency issues
+# [[plugins]]
+#   package = "@netlify/plugin-nextjs"
 
 # Development proxy for local testing
 [dev]

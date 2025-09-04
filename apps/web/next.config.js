@@ -11,8 +11,12 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Use standard build for Netlify
-  output: 'standalone',
+  // Use export for static site generation on Netlify
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  },
   
   // Disable SWC completely
   swcMinify: false,
